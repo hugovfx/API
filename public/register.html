@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+</head>
+<body>
+  <h1>Registro de Usuario</h1>
+  <form id="register-form">
+    <label for="user_nombre">Nombre:</label>
+    <input type="text" id="user_nombre" name="user_nombre" required><br>
+
+    <label for="user_apellido">Apellido:</label>
+    <input type="text" id="user_apellido" name="user_apellido" required><br>
+
+    <label for="user_password">Contraseña:</label>
+    <input type="password" id="user_password" name="user_password" required><br>
+
+    <label for="user_email">Correo Electrónico:</label>
+    <input type="email" id="user_email" name="user_email" required><br>
+
+    <label for="user_language">Idioma:</label>
+    <select id="user_language" name="user_language" required>
+      <option value="Spanish">Español</option>
+      <option value="English">Inglés</option>
+    </select><br>
+
+    <button type="submit">Registrarse</button>
+  </form>
+  <script src="register.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil del Usuario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .profile-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .products-list {
+      margin-bottom: 20px;
+    }
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+    }
+    .product-card img {
+      max-width: 100px;
+      margin-right: 10px;
+    }
+    .product-details {
+      display: flex;
+      align-items: center;
+    }
+    .contact-form {
+      margin-top: 20px;
+    }
+    .contact-form label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .contact-form input, .contact-form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .contact-form button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-header">
+      <h1 id="user-name">Nombre del Usuario</h1>
+    </div>
+    
+    <div class="products-list">
+      <h2>Productos Publicados</h2>
+      <div id="products">
+        <!-- Productos del usuario se agregarán aquí dinámicamente -->
+      </div>
+    </div>
+    
+    <div class="contact-form">
+      <h2>Registrar Forma de Contacto</h2>
+      <form id="contact-form">
+        <label for="contact-type">Tipo de Contacto:</label>
+        <select id="contact-type" name="contact-type" required>
+          <option value="">Seleccione</option>
+          <option value="email">Email</option>
+          <option value="phone">Teléfono</option>
+          <option value="social">Red Social</option>
+        </select>
+        
+        <label for="contact-value">Valor:</label>
+        <input type="text" id="contact-value" name="contact-value" required>
+        
+        <button type="submit">Agregar Contacto</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userId = 1; // Reemplaza con el ID del usuario autenticado
+
+      // Obtener datos del usuario
+      const userResponse = await fetch(`/api/users/${userId}`);
+      const user = await userResponse.json();
+      document.getElementById('user-name').textContent = user.name;
+
+      // Obtener productos del usuario
+      const productsResponse = await fetch(`/api/users/${userId}/products`);
+      const products = await productsResponse.json();
+      const productsContainer = document.getElementById('products');
+
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        
+        productCard.innerHTML = `
+          <div class="product-details">
+            <img src="${product.image_url}" alt="${product.name}">
+            <div>
+              <h3>${product.name}</h3>
+              <p>Precio: ${product.price} $</p>
+              <p>${product.description}</p>
+            </div>
+          </div>
+        `;
+        
+        productsContainer.appendChild(productCard);
+      });
+
+      // Manejar envío del formulario de contacto
+      document.getElementById('contact-form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const contactType = document.getElementById('contact-type').value;
+        const contactValue = document.getElementById('contact-value').value;
+
+        const response = await fetch(`/api/users/${userId}/contacts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contact_type: contactType,
+            contact_value: contactValue
+          })
+        });
+
+        if (response.ok) {
+          alert('Forma de contacto agregada exitosamente');
+          document.getElementById('contact-form').reset();
+        } else {
+          alert('Error al agregar la forma de contacto');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

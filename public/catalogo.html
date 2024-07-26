@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .product-card {
+      display: inline-block;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      background-color: white;
+      text-align: center;
+      width: 200px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .product-card img {
+      max-width: 100%;
+      height: auto;
+    }
+    .buy-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .close-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .contact-info {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Catálogo de Productos</h1>
+  <div id="product-list">
+    <!-- Aquí se agregarán los productos dinámicamente -->
+  </div>
+
+  <div id="product-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal" class="close-button">Cerrar</span>
+      <h2 id="modal-product-name"></h2>
+      <img id="modal-product-image" src="" alt="Imagen del producto">
+      <p><strong>Precio:</strong> <span id="modal-product-price"></span></p>
+      <p><strong>Categoría:</strong> <span id="modal-product-category"></span></p>
+      <p><strong>Publicado por:</strong> <span id="modal-product-user"></span></p>
+      <p id="modal-product-description"></p>
+      <div id="modal-contact-info" class="contact-info">
+        <!-- La información de contacto se mostrará aquí -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const productList = document.getElementById('product-list');
+
+      const response = await fetch('/api/products');
+      const products = await response.json();
+
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+
+        productCard.innerHTML = `
+          <img src="${product.image_url}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>${product.price} $</p>
+          <button class="buy-button" data-id="${product.id}">Comprar</button>
+        `;
+
+        productList.appendChild(productCard);
+      });
+
+      document.querySelectorAll('.buy-button').forEach(button => {
+        button.addEventListener('click', async (event) => {
+          const productId = event.target.getAttribute('data-id');
+          const response = await fetch(`/api/products/${productId}`);
+          const product = await response.json();
+
+          document.getElementById('modal-product-name').textContent = product.name;
+          document.getElementById('modal-product-image').src = product.image_url;
+          document.getElementById('modal-product-price').textContent = product.price;
+          document.getElementById('modal-product-category').textContent = product.category_name;
+          document.getElementById('modal-product-user').textContent = product.user_name;
+          document.getElementById('modal-product-description').textContent = product.description;
+
+          // Mostrar la información de contacto
+          let contactInfoHTML = '';
+          if (product.contacts && product.contacts.length > 0) {
+            product.contacts.forEach(contact => {
+              contactInfoHTML += `<p><strong>Contacto (${contact.contact_type}):</strong> ${contact.contact_value}</p>`;
+            });
+          } else {
+            contactInfoHTML = '<p>No hay información de contacto disponible.</p>';
+          }
+          document.getElementById('modal-contact-info').innerHTML = contactInfoHTML;
+
+          document.getElementById('product-modal').style.display = 'block';
+        });
+      });
+
+      document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('product-modal').style.display = 'none';
+      });
+
+      window.addEventListener('click', (event) => {
+        if (event.target == document.getElementById('product-modal')) {
+          document.getElementById('product-modal').style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
