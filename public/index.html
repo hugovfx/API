@@ -37,6 +37,29 @@
     <a href="/login.html" class="button">Iniciar Sesión</a>
     <a href="/register.html" class="button">Registrarse</a>
     <a href="/catalogo.html" class="button">Catálogo</a>
+    <button id="post-product-button" class="button">Publicar Producto</button>
+    <button id="profile-button" class="button">Perfil</button> <!-- Nuevo botón de perfil -->
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const postProductButton = document.getElementById('post-product-button');
+      const profileButton = document.getElementById('profile-button'); // Botón de perfil
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        postProductButton.disabled = true;
+        postProductButton.style.backgroundColor = '#ccc';
+        profileButton.disabled = true; // Deshabilitar botón de perfil si no está autenticado
+        profileButton.style.backgroundColor = '#ccc'; // Cambiar color de fondo del botón de perfil
+      } else {
+        postProductButton.addEventListener('click', () => {
+          window.location.href = 'postProducto.html';
+        });
+        profileButton.addEventListener('click', () => {
+          window.location.href = 'profile.html'; // Redirigir al perfil si está autenticado
+        });
+      }
+    });
+  </script>
 </body>
 </html>

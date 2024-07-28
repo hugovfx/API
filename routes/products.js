@@ -35,7 +35,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
           // Registrar el producto en la base de datos
           await db.query('INSERT INTO products (name, price, category_id, description, image_id, user_id) VALUES (?, ?, ?, ?, ?, ?)',
-            [name, price, category_id, description, imageId, req.user_id]
+            [name, price, category_id, description, imageId, req.user.user_id]
           );
 
           res.status(201).json({ message: 'Producto publicado' });
@@ -53,6 +53,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     res.status(500).json({ message: 'Error al procesar la solicitud' });
   }
 });
+
 
 // Obtener la lista de productos con opción de filtro por categoría
 router.get('/', async (req, res) => {

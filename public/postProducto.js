@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Necesitas iniciar sesión para publicar un producto');
+    window.location.href = 'login.html';
+    return;
+  }
+
   // Cargar categorías
   const categorySelect = document.getElementById('category_id');
   const response = await fetch('/api/categories');
@@ -17,7 +24,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault();
 
     const formData = new FormData(form);
-    const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
 
     try {
       const response = await fetch('/api/products', {

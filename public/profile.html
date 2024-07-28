@@ -130,7 +130,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="profile-container" style="display:none;">
     <div class="profile-header">
       <h1 id="user-name">Nombre del Usuario</h1>
     </div>
@@ -186,14 +186,28 @@
 
   <script>
     let currentDeleteId = null;
-    
+
     document.addEventListener('DOMContentLoaded', async () => {
-      const userId = 1; // Reemplaza con el ID del usuario autenticado
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = 'index.html'; // Redirigir a index.html si no está autenticado
+        return;
+      }
+      
+      // Obtener ID del usuario desde el token
+      const response = await fetch('/api/users/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const user = await response.json();
+      const userId = user.id;
     
       // Obtener datos del usuario
       const userResponse = await fetch(`/api/users/${userId}`);
-      const user = await userResponse.json();
-      document.getElementById('user-name').textContent = user.name;
+      const userData = await userResponse.json();
+      document.getElementById('user-name').textContent = userData.name;
+      document.getElementById('profile-container').style.display = 'block';
     
       // Obtener productos del usuario
       const productsResponse = await fetch(`/api/users/${userId}/products`);
@@ -211,25 +225,39 @@
               <h3>${product.name}</h3>
               <p>Precio: ${product.price} $</p>
               <p>${product.description}</p>
-              <button onclick="openConfirmModal(${product.id}, 'product')">Eliminar Producto</button>
+              <button class="delete-button" data-id="${product.id}">Eliminar</button>
             </div>
           </div>
         `;
-        
         productsContainer.appendChild(productCard);
       });
     
-      // Cargar contactos
-      await loadContacts();
+      // Obtener formas de contacto del usuario
+      const contactsResponse = await fetch(`/api/users/${userId}/contacts`);
+      const contacts = await contactsResponse.json();
+      const contactsContainer = document.getElementById('contacts');
+    
+      contacts.forEach(contact => {
+        const contactItem = document.createElement('div');
+        contactItem.className = 'contact-item';
+        
+        contactItem.innerHTML = `
+          <span>${contact.contact_type}: ${contact.contact_value}</span>
+          <button class="delete-button" data-id="${contact.contact_id}">Eliminar</button>
+        `;
+        contactsContainer.appendChild(contactItem);
+      });
     
       // Manejar envío del formulario de contacto
-      document.getElementById('contact-form').addEventListener('submit', async (event) => {
+      const contactForm = document.getElementById('contact-form');
+      contactForm.addEventListener('submit', async (event) => {
         event.preventDefault();
-    
-        const contactType = document.getElementById('contact-type').value;
-        const contactValue = document.getElementById('contact-value').value;
-    
-        const response = await fetch(`/api/users/${userId}/contacts`, {
+        
+        const formData = new FormData(contactForm);
+        const contactType = formData.get('contact-type');
+        const contactValue = formData.get('contact-value');
+        
+        await fetch(`/api/users/${userId}/contacts`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -239,101 +267,38 @@
             contact_value: contactValue
           })
         });
-    
-        if (response.ok) {
-          alert('Forma de contacto agregada exitosamente');
-          document.getElementById('contact-form').reset();
-          await loadContacts(); // Recargar la lista de contactos
-        } else {
-          alert('Error al agregar la forma de contacto');
-        }
+        
+        // Recargar la página para mostrar el nuevo contacto
+        window.location.reload();
       });
-    });
     
-    // Mostrar modal de confirmación
-    function openConfirmModal(id, type) {
-      currentDeleteId = { id, type };
-      document.getElementById('confirm-modal').style.display = 'block';
-    }
-    
-    // Eliminar contacto
-    function deleteContact() {
-      const userId = 1; // Asegúrate de que el userId sea dinámico o correcto
-      fetch(`/api/users/${userId}/contacts/${currentDeleteId.id}`, {
-        method: 'DELETE'
-      })
-      .then(response => {
-        if (response.ok) {
-          alert('Forma de contacto eliminada');
-          loadContacts(); // Recargar la lista de contactos
-        } else {
-          alert('Error al eliminar la forma de contacto');
-        }
-      })
-      .catch(error => {
-        console.error('Error al eliminar la forma de contacto:', error);
-      });
-    }
-    
-    // Eliminar producto
-    function deleteProduct() {
-      fetch(`/api/products/${currentDeleteId.id}`, {
-        method: 'DELETE'
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.message === 'Producto eliminado exitosamente') {
-          alert('Producto eliminado exitosamente');
-          location.reload(); // Recargar la página para reflejar los cambios
-        } else {
-          alert('Error al eliminar el producto');
-        }
-      })
-      .catch(error => {
-        console.error('Error al eliminar el producto:', error);
-      });
-    }
-    
-    // Confirmar eliminación
-    document.getElementById('confirm-delete').addEventListener('click', () => {
-      if (currentDeleteId.type === 'contact') {
-        deleteContact();
-      } else if (currentDeleteId.type === 'product') {
-        deleteProduct();
-      }
-      document.getElementById('confirm-modal').style.display = 'none';
-    });
-    
-    // Cancelar eliminación
-    document.getElementById('cancel-delete').addEventListener('click', () => {
-      document.getElementById('confirm-modal').style.display = 'none';
-    });
-    
-    // Cargar contactos
-    async function loadContacts() {
-      const userId = 1; // Reemplaza con el ID del usuario autenticado
-      try {
-        const response = await fetch(`/api/users/${userId}/contacts`);
-        const contacts = await response.json();
-        const contactsContainer = document.getElementById('contacts');
-        contactsContainer.innerHTML = ''; // Limpiar contactos existentes
-    
-        contacts.forEach(contact => {
-          const contactItem = document.createElement('div');
-          contactItem.className = 'contact-item';
+      // Manejar eliminación de productos y contactos
+      document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+          currentDeleteId = button.getAttribute('data-id');
+          const isProduct = button.parentElement.parentElement.classList.contains('product-details');
+          const confirmModal = document.getElementById('confirm-modal');
+          confirmModal.style.display = 'block';
+
+          const confirmDeleteButton = document.getElementById('confirm-delete');
+          const cancelDeleteButton = document.getElementById('cancel-delete');
           
-          contactItem.innerHTML = `
-            <div>
-              <strong>${contact.contact_type.charAt(0).toUpperCase() + contact.contact_type.slice(1)}:</strong> ${contact.contact_value}
-            </div>
-            <button onclick="openConfirmModal(${contact.contact_id}, 'contact')">Eliminar</button>`;
+          confirmDeleteButton.onclick = async () => {
+            const endpoint = isProduct ? 'products' : 'contacts';
+            await fetch(`/api/users/${userId}/${endpoint}/${currentDeleteId}`, {
+              method: 'DELETE',
+            });
+            confirmModal.style.display = 'none';
+            window.location.reload();
+          };
           
-          contactsContainer.appendChild(contactItem);
+          cancelDeleteButton.onclick = () => {
+            confirmModal.style.display = 'none';
+            currentDeleteId = null;
+          };
         });
-      } catch (error) {
-        console.error('Error al cargar los contactos:', error);
-      }
-    }
+      });
+    });
   </script>
 </body>
 </html>

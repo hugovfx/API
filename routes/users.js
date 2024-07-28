@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
+const authenticateToken = require('../middleware/auth');  // Importa el middleware
 
 // Registro de usuario
 router.post('/register', async (req, res) => {
@@ -57,6 +58,20 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Obtener información del usuario autenticado
+router.get('/me', authenticateToken, async (req, res) => {
+  try {
+    const [results] = await db.query('SELECT user_id AS id, user_nombre AS name, user_apellido AS surname, user_email AS email, user_language AS language FROM users WHERE user_id = ?', [req.user.user_id]);
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    res.json(results[0]);
+  } catch (err) {
+    console.error('Error al obtener los datos del usuario:', err);
+    res.status(500).json({ message: 'Error al obtener los datos del usuario' });
+  }
+});
+
 // Obtener información del usuario
 router.get('/:id', async (req, res) => {
   try {
@@ -98,7 +113,6 @@ router.post('/:id/contacts', async (req, res) => {
   }
 });
 
-
 // Obtener formas de contacto del usuario
 router.get('/:id/contacts', async (req, res) => {
   try {
@@ -120,7 +134,6 @@ router.delete('/:id/contacts/:contactId', async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar la forma de contacto' });
   }
 });
-
 
 // Eliminar producto
 router.delete('/:id/products/:productId', async (req, res) => {
