@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publicar Producto</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/css/foundation.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
     body {
       background-color: #f4f4f4;
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -31,17 +33,6 @@
       margin-bottom: 20px;
       text-align: center;
       font-size: 24px;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #027f7f;
     }
 
     input, select, textarea {
@@ -116,42 +107,138 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Publicar Producto</h1>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/" id="home-link">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="language-img" src="img/language.png" alt="Language" width="20" height="20">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown" id="language-options">
+            <a class="dropdown-item" href="#" data-lang="en">English</a>
+            <a class="dropdown-item" href="#" data-lang="es">Español</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1 id="publicar-producto">Publish Product</h1>
     <form id="post-product-form" enctype="multipart/form-data">
-      <label for="name">Nombre:</label>
-      <input type="text" id="name" name="name" required>
-
-      <label for="price">Precio:</label>
-      <input type="number" id="price" name="price" step="0.01" required>
-
-      <label for="category_id">Categoría:</label>
-      <select id="category_id" name="category_id" required>
-        <!-- Las opciones se cargarán dinámicamente -->
-      </select>
-
-      <label for="description">Descripción:</label>
-      <textarea id="description" name="description" required></textarea>
-
-      <label for="image">Imagen:</label>
-      <div class="file-upload-wrapper">
-        <span class="file-upload-label">No se ha seleccionado ningún archivo</span>
-        <label class="file-upload-button">
-          Seleccionar imagen
-          <input type="file" id="image" name="image" accept="image/*" required>
-        </label>
+      <div class="form-group">
+        <input type="text" id="name" name="name" class="form-control" placeholder="Name" required>
       </div>
 
-      <button type="submit">Publicar</button>
+      <div class="form-group">
+        <input type="number" id="price" name="price" class="form-control" step="0.01" placeholder="Price" required>
+      </div>
+
+      <div class="form-group">
+        <select id="category_id" name="category_id" class="form-control" required>
+          <!-- Las opciones se cargarán dinámicamente -->
+          <option value="" disabled selected id="category-text">Category</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <textarea id="description" name="description" class="form-control" placeholder="Description" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <div class="file-upload-wrapper">
+          <span class="file-upload-label" id="file-name">No file selected</span>
+          <label class="file-upload-button" id="img-select">
+            Select image
+            <input type="file" id="image" name="image" accept="image/*" required>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit " class="form-control" style="background-color: #027f7f !important; color: white !important;" id="button-submit">Post</button>
+      </div>
     </form>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="postProducto.js"></script>
   <script>
     // Script para actualizar el nombre del archivo seleccionado
     document.getElementById('image').addEventListener('change', function(event) {
       const fileName = event.target.files.length > 0 ? event.target.files[0].name : 'No se ha seleccionado ningún archivo';
-      document.querySelector('.file-upload-label').textContent = fileName;
+      document.getElementById('file-name').textContent = fileName;
+    });
+
+    const translations = {
+      en: {
+        "page-title": "Post Product",
+        "home-link": "Home",
+        "name": "Name",
+        "price": "Price",
+        "category": "Category",
+        "description": "Description",
+        "image": "Image",
+        "button-submit": "Post",
+        "img-select": "Select image",
+        "file-name": "No file selected",
+        "category-text": "Category",
+        "publicar-producto": "Publish Product"
+      },
+      es: {
+        "page-title": "Publicar Producto",
+        "home-link": "Inicio",
+        "name": "Nombre",
+        "price": "Precio",
+        "category": "Categoría",
+        "description": "Descripción",
+        "image": "Imagen",
+        "button-submit": "Publicar",
+        "img-select": "Seleccionar imagen",
+        "file-name": "No se ha seleccionado ningún archivo",
+        "category-text": "Categoria",
+        "publicar-producto": "Publicar Producto"
+      }
+    };
+
+    function changeLanguage(lang) {
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(element => {
+        const key = element.id;
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+
+        // Change placeholders
+        const inputs = document.querySelectorAll('input[placeholder]');
+        inputs.forEach(input => {
+            const key = input.id;
+            if (translations[lang][key]) {
+                input.placeholder = translations[lang][key];
+            }
+        });
+      });
+
+      // Change language image
+      const languageImg = document.getElementById('language-img');
+      if (lang === 'es') {
+        languageImg.src = 'img/MXlenguaje.png';
+      } else {
+        languageImg.src = 'img/language.png';
+      }
+    }
+
+    document.getElementById('language-options').addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        const lang = e.target.dataset.lang;
+        changeLanguage(lang);
+      }
     });
   </script>
 </body>
