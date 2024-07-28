@@ -14,7 +14,6 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -98,17 +97,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" id="loginButtonContainer">
-          <a class="nav-link" href="/login.html" id="login-text">Login</a>
-        </li>
         <li class="nav-item" id="registerButtonContainer">
           <a class="nav-link" href="/register.html" id="register-text">Register</a>
-        </li>
-        <li class="nav-item d-none" id="postProductButtonContainer">
-          <a class="nav-link" href="#" id="post-product-text">Post Product</a>
-        </li>
-        <li class="nav-item d-none" id="profileButtonContainer">
-          <a class="nav-link" href="#" id="profile-text">Profile</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -123,20 +113,20 @@
     </div>
   </nav>
 
-  <div class="login">
-    <h2>Iniciar Sesión</h2>
+  <div class="login container mt-5" style="margin-top: 100px !important;">
+    <h2>Tianguis UTCH</h2>
     <form id="login-form">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-        <input type="email" class="form-control" placeholder="Correo Electrónico" name="user_email" required>
+        <input id="email-input" type="email" class="form-control" placeholder="Email" name="user_email" required>
       </div>
 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-        <input type="password" class="form-control" placeholder="Contraseña" name="user_password" required>
+        <input id="password-input" type="password" class="form-control" placeholder="Password" name="user_password" required>
       </div>
 
-      <button type="submit" class="button float">Iniciar Sesión</button>
+      <button type="submit" class="button float" id="button-submit">Log in</button>
     </form>
   </div>
 
@@ -152,7 +142,10 @@
         "login-text": "Login",
         "register-text": "Register",
         "post-product-text": "Post Product",
-        "profile-text": "Profile"
+        "profile-text": "Profile",
+        "button-submit": "Log in",
+        "password-input": "Password",
+        "email-input": "Email"
       },
       es: {
         "page-title": "Iniciar Sesión",
@@ -160,7 +153,10 @@
         "login-text": "Iniciar Sesión",
         "register-text": "Registrar",
         "post-product-text": "Publicar Producto",
-        "profile-text": "Perfil"
+        "profile-text": "Perfil",
+        "button-submit": "Iniciar Sesión",
+        "password-input": "Contraseña",
+        "email-input": "Correo Electrónico"
       }
     };
 
@@ -189,25 +185,6 @@
       }
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const loginButtonContainer = document.getElementById('loginButtonContainer');
-      const registerButtonContainer = document.getElementById('registerButtonContainer');
-      const postProductButtonContainer = document.getElementById('postProductButtonContainer');
-      const profileButtonContainer = document.getElementById('profileButtonContainer');
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        postProductButtonContainer.classList.add('d-none');
-        profileButtonContainer.classList.add('d-none');
-        loginButtonContainer.classList.remove('d-none');
-        registerButtonContainer.classList.remove('d-none');
-      } else {
-        postProductButtonContainer.classList.remove('d-none');
-        profileButtonContainer.classList.remove('d-none');
-        loginButtonContainer.classList.add('d-none');
-        registerButtonContainer.classList.add('d-none');
-      }
-    });
   </script>
 </body>
 </html>
