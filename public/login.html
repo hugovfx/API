@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/css/foundation.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
@@ -53,7 +53,7 @@
 
     .form-control {
       width: 100%;
-      padding: 10px 10px 10px 40px; /* Add padding to accommodate the icon */
+      padding: 10px 10px 10px 40px;
       border: 1px solid #027f7f;
       border-radius: 5px;
       font-size: 16px;
@@ -91,6 +91,38 @@
   </style>
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/" id="home-link">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" id="loginButtonContainer">
+          <a class="nav-link" href="/login.html" id="login-text">Login</a>
+        </li>
+        <li class="nav-item" id="registerButtonContainer">
+          <a class="nav-link" href="/register.html" id="register-text">Register</a>
+        </li>
+        <li class="nav-item d-none" id="postProductButtonContainer">
+          <a class="nav-link" href="#" id="post-product-text">Post Product</a>
+        </li>
+        <li class="nav-item d-none" id="profileButtonContainer">
+          <a class="nav-link" href="#" id="profile-text">Profile</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="language-img" src="img/language.png" alt="Language" width="20" height="20">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown" id="language-options">
+            <a class="dropdown-item" href="#" data-lang="en">English</a>
+            <a class="dropdown-item" href="#" data-lang="es">Español</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="login">
     <h2>Iniciar Sesión</h2>
     <form id="login-form">
@@ -107,7 +139,75 @@
       <button type="submit" class="button float">Iniciar Sesión</button>
     </form>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="login.js"></script>
+  <script>
+    const translations = {
+      en: {
+        "page-title": "Login",
+        "home-link": "Home",
+        "login-text": "Login",
+        "register-text": "Register",
+        "post-product-text": "Post Product",
+        "profile-text": "Profile"
+      },
+      es: {
+        "page-title": "Iniciar Sesión",
+        "home-link": "Inicio",
+        "login-text": "Iniciar Sesión",
+        "register-text": "Registrar",
+        "post-product-text": "Publicar Producto",
+        "profile-text": "Perfil"
+      }
+    };
+
+    function changeLanguage(lang) {
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(element => {
+        const key = element.id;
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+      });
+
+      // Change language image
+      const languageImg = document.getElementById('language-img');
+      if (lang === 'es') {
+        languageImg.src = 'img/MXlenguaje.png';
+      } else {
+        languageImg.src = 'img/language.png';
+      }
+    }
+
+    document.getElementById('language-options').addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        const lang = e.target.dataset.lang;
+        changeLanguage(lang);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginButtonContainer = document.getElementById('loginButtonContainer');
+      const registerButtonContainer = document.getElementById('registerButtonContainer');
+      const postProductButtonContainer = document.getElementById('postProductButtonContainer');
+      const profileButtonContainer = document.getElementById('profileButtonContainer');
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        postProductButtonContainer.classList.add('d-none');
+        profileButtonContainer.classList.add('d-none');
+        loginButtonContainer.classList.remove('d-none');
+        registerButtonContainer.classList.remove('d-none');
+      } else {
+        postProductButtonContainer.classList.remove('d-none');
+        profileButtonContainer.classList.remove('d-none');
+        loginButtonContainer.classList.add('d-none');
+        registerButtonContainer.classList.add('d-none');
+      }
+    });
+  </script>
 </body>
 </html>

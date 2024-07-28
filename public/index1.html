@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .nav-link {
+      color: white !important;
+      font-size: 16px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      margin: 0;
+    }
+    .nav-link:hover {
+      color: #f0f0f0 !important;
+    }
+    .nav-item {
+      height: 100%;
+    }
+    .navbar-nav {
+      height: 100%;
+    }
+    .jumbotron {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">Inicio</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" id="loginButtonContainer">
+          <a class="nav-link" href="/login.html" id="loginButton">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item" id="registerButtonContainer">
+          <a class="nav-link" href="/register.html" id="registerButton">Registrarse</a>
+        </li>
+        <li class="nav-item d-none" id="postProductButtonContainer">
+          <a class="nav-link" href="#" id="post-product-button">Publicar Producto</a>
+        </li>
+        <li class="nav-item d-none" id="profileButtonContainer">
+          <a class="nav-link" href="#" id="profile-button">Perfil</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Bienvenido</h1>
+      <p>Explora nuestro catálogo de productos.</p>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginButtonContainer = document.getElementById('loginButtonContainer');
+      const registerButtonContainer = document.getElementById('registerButtonContainer');
+      const postProductButtonContainer = document.getElementById('postProductButtonContainer');
+      const profileButtonContainer = document.getElementById('profileButtonContainer');
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        postProductButtonContainer.classList.add('d-none');
+        profileButtonContainer.classList.add('d-none');
+        loginButtonContainer.classList.remove('d-none');
+        registerButtonContainer.classList.remove('d-none');
+      } else {
+        postProductButtonContainer.classList.remove('d-none');
+        profileButtonContainer.classList.remove('d-none');
+        loginButtonContainer.classList.add('d-none');
+        registerButtonContainer.classList.add('d-none');
+        
+        const postProductButton = document.getElementById('post-product-button');
+        const profileButton = document.getElementById('profile-button');
+        
+        postProductButton.addEventListener('click', () => {
+          window.location.href = 'postProducto.html';
+        });
+        profileButton.addEventListener('click', () => {
+          window.location.href = 'profile.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

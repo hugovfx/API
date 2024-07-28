@@ -1,62 +1,345 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inicio</title>
+  <title>Catalog</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/footerstyle.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background-color: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
-      background-color: #f0f0f0;
+      padding: 0;
     }
-    .container {
+
+    h1 {
+      color: #027f7f;
+      margin: 20px 0;
       text-align: center;
     }
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      margin: 10px;
-      background-color: #4CAF50; /* Verde */
-      color: white;
-      text-decoration: none;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
+
+    #category-filter {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
+      width: 200px;
+    }
+
+    .category-button {
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      padding: 8px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      color: #333;
+      background-color: #e9ecef;
+      transition: background-color 0.3s;
+    }
+
+    .category-button.selected {
+      color: #027f7f;
+      font-weight: bold;
+      background-color: #d4edda;
+    }
+
+    #product-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .product-card {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 300px;
+      text-align: center;
+      padding: 0; /* Remove padding */
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-top-left-radius: 10px; /* Round top corners */
+      border-top-right-radius: 10px; /* Round top corners */
+    }
+
+    .product-card .card-body {
+      padding: 10px;
+    }
+
+    .product-card h3 {
+      color: #027f7f;
+      margin: 10px 0;
+      font-size: 20px;
+    }
+
+    .product-card p {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .buy-button {
+      background-color: #027f7f;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .buy-button:hover {
+      background-color: #025e5e;
+    }
+
+    .jumbotron {
+      text-align: center;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bienvenido</h1>
-    <a href="/login.html" class="button">Iniciar Sesión</a>
-    <a href="/register.html" class="button">Registrarse</a>
-    <a href="/catalogo.html" class="button">Catálogo</a>
-    <button id="post-product-button" class="button">Publicar Producto</button>
-    <button id="profile-button" class="button">Perfil</button> <!-- Nuevo botón de perfil -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" id="loginButtonContainer">
+          <a class="nav-link" href="/login.html" id="loginButton">Login</a>
+        </li>
+        <li class="nav-item" id="registerButtonContainer">
+          <a class="nav-link" href="/register.html" id="registerButton">Register</a>
+        </li>
+        <li class="nav-item d-none" id="postProductButtonContainer">
+          <a class="nav-link" href="#" id="post-product-button">Post Product</a>
+        </li>
+        <li class="nav-item d-none" id="profileButtonContainer">
+          <a class="nav-link" href="#" id="profile-button">Profile</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="jumbotron">
+    <div class="container" style="display: flex; flex-direction: column;">
+      <h1>Welcome</h1>
+      <p>Explore our product catalog.</p>
+    </div>
   </div>
+
+  <div class="container mt-4">
+    <div id="category-filter">
+      <button class="category-button" data-id="all">All</button>
+      <!-- Categories will be dynamically added here -->
+    </div>
+
+    <div id="product-list" class="row" >
+      <!-- Products will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productModalLabel">Product</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img id="modal-product-image" src="" alt="" class="img-fluid mb-3" style="align-self: center !important;">
+          <h3 id="modal-product-name"></h3>
+          <p id="modal-product-price"></p>
+          <p id="modal-product-description"></p>
+          <h5 id="modal-product-contact">Contact details of </h5>
+          <div id="modal-contact-info"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER START -->
+  <footer class="bg-dark text-white mt-5">
+    <div class="container">
+      <div class="row py-4">
+        <div class="col-md-3">
+          <img src="img/logo.png" alt="Logo" style="width: 200px;">
+        </div>
+        <div class="col-md-6">
+          <h5>Sobre Nosotros</h5>
+          <p>Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.</p>
+        </div>
+        <div class="col-md-3">
+          <h5>Enlaces Rápidos</h5>
+          <ul class="list-unstyled">
+            <li><a href="/" class="text-white">Inicio</a></li>
+            <li><a href="/contact.html" class="text-white">Contacto</a></li>
+            <li><a href="/login.html" class="text-white">Login</a></li>
+            <li><a href="/register.html" class="text-white">Register</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h5>Contacto</h5>
+          <ul class="list-unstyled">
+            <li class="text-white">Email: <a href="mailto:tianguisutch@gmail.com" class="text-white">tianguisutch@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>  
+    <div class="bg-secondary text-center py-3">
+      <p class="mb-0">© 2024 Tianguis UTCH. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  
+    <!-- FOOTER END -->
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const categoryFilter = document.getElementById('category-filter');
+      const productList = document.getElementById('product-list');
+
+      // Load categories
+      const categoriesResponse = await fetch('/api/categories');
+      const categories = await categoriesResponse.json();
+      categories.forEach(category => {
+        const button = document.createElement('button');
+        button.className = 'category-button btn btn-light mb-2';
+        button.setAttribute('data-id', category.id);
+        button.textContent = category.name;
+        categoryFilter.appendChild(button);
+      });
+
+      // Load products
+      async function loadProducts(categoryId = 'all') {
+        productList.innerHTML = '';
+        const productsResponse = await fetch(`/api/products${categoryId !== 'all' ? `?category_id=${categoryId}` : ''}`);
+        const products = await productsResponse.json();
+
+        products.forEach(product => {
+          const productCard = document.createElement('div');
+          productCard.className = 'product-card col-md-4 mb-4';
+          productCard.innerHTML = `
+            <div class="card">
+              <img src="${product.image_url}" class="card-img-top" alt="${product.name}">
+              <div class="card-body">
+                <h5 class="card-title">${product.name}</h5>
+                <p class="card-text">$${product.price}</p>
+                <button class="buy-button btn btn-primary" data-id="${product.id}">More</button>
+              </div>
+            </div>
+          `;
+          productList.appendChild(productCard);
+        });
+
+        document.querySelectorAll('.buy-button').forEach(button => {
+          button.addEventListener('click', async (event) => {
+            const productId = event.target.getAttribute('data-id');
+            const response = await fetch(`/api/products/${productId}`);
+            const product = await response.json();
+
+            document.getElementById('modal-product-name').textContent = product.name;
+            document.getElementById('modal-product-image').src = product.image_url;
+            document.getElementById('modal-product-price').textContent = '$'+product.price;
+            document.getElementById('modal-product-description').textContent = product.description;
+            document.getElementById('modal-product-contact').textContent += product.user_name+':';
+
+            let contactInfoHTML = '';
+            if (product.contacts && product.contacts.length > 0) {
+              product.contacts.forEach(contact => {
+                contactInfoHTML += `<p><strong> - ${contact.contact_type}:</strong> ${contact.contact_value}</p>`;
+              });
+            } else {
+              contactInfoHTML = '<p>No contact information available.</p>';
+            }
+            document.getElementById('modal-contact-info').innerHTML = contactInfoHTML;
+
+            $('#productModal').modal('show');
+          });
+        });
+      }
+
+      // Category filter event handling
+      categoryFilter.addEventListener('click', (event) => {
+        if (event.target.classList.contains('category-button')) {
+          document.querySelectorAll('.category-button').forEach(button => button.classList.remove('selected'));
+          event.target.classList.add('selected');
+          const selectedCategory = event.target.getAttribute('data-id');
+          loadProducts(selectedCategory);
+        }
+      });
+
+      // Load all products by default
+      loadProducts();
+    });
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('product-modal').style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target == document.getElementById('product-modal')) {
+        document.getElementById('product-modal').style.display = 'none';
+      }
+    });
+  </script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const postProductButton = document.getElementById('post-product-button');
-      const profileButton = document.getElementById('profile-button'); // Botón de perfil
+      const loginButtonContainer = document.getElementById('loginButtonContainer');
+      const registerButtonContainer = document.getElementById('registerButtonContainer');
+      const postProductButtonContainer = document.getElementById('postProductButtonContainer');
+      const profileButtonContainer = document.getElementById('profileButtonContainer');
       const token = localStorage.getItem('token');
       
       if (!token) {
-        postProductButton.disabled = true;
-        postProductButton.style.backgroundColor = '#ccc';
-        profileButton.disabled = true; // Deshabilitar botón de perfil si no está autenticado
-        profileButton.style.backgroundColor = '#ccc'; // Cambiar color de fondo del botón de perfil
+        postProductButtonContainer.classList.add('d-none');
+        profileButtonContainer.classList.add('d-none');
+        loginButtonContainer.classList.remove('d-none');
+        registerButtonContainer.classList.remove('d-none');
       } else {
+        postProductButtonContainer.classList.remove('d-none');
+        profileButtonContainer.classList.remove('d-none');
+        loginButtonContainer.classList.add('d-none');
+        registerButtonContainer.classList.add('d-none');
+        
+        const postProductButton = document.getElementById('post-product-button');
+        const profileButton = document.getElementById('profile-button');
+        
         postProductButton.addEventListener('click', () => {
           window.location.href = 'postProducto.html';
         });
         profileButton.addEventListener('click', () => {
-          window.location.href = 'profile.html'; // Redirigir al perfil si está autenticado
+          window.location.href = 'profile.html';
         });
       }
     });

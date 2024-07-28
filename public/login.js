@@ -16,7 +16,7 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
       const data = await response.json();
       localStorage.setItem('token', data.token); // Guarda el token en localStorage
       alert('Inicio de sesión exitoso');
-      window.location.href = 'postProducto.html'; // Redirige a la página de publicación de productos
+      window.location.href = 'index.html'; // Redirige a la página de publicación de productos
     } else {
       const data = await response.json();
       alert(`Error: ${data.message}`);

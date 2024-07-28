@@ -23,6 +23,15 @@
       text-align: center;
       margin-bottom: 20px;
     }
+    .logout-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      float: right;
+    }
     .products-list {
       margin-bottom: 20px;
     }
@@ -133,6 +142,7 @@
   <div class="container" id="profile-container" style="display:none;">
     <div class="profile-header">
       <h1 id="user-name">Nombre del Usuario</h1>
+      <button class="logout-button" id="logout-button">Cerrar Sesión</button>
     </div>
     
     <div class="products-list">
@@ -268,35 +278,39 @@
           })
         });
         
-        // Recargar la página para mostrar el nuevo contacto
-        window.location.reload();
+        // Recargar la página para ver la nueva forma de contacto
+        location.reload();
       });
     
-      // Manejar eliminación de productos y contactos
-      document.querySelectorAll('.delete-button').forEach(button => {
-        button.addEventListener('click', (event) => {
-          currentDeleteId = button.getAttribute('data-id');
-          const isProduct = button.parentElement.parentElement.classList.contains('product-details');
-          const confirmModal = document.getElementById('confirm-modal');
-          confirmModal.style.display = 'block';
-
-          const confirmDeleteButton = document.getElementById('confirm-delete');
-          const cancelDeleteButton = document.getElementById('cancel-delete');
-          
-          confirmDeleteButton.onclick = async () => {
-            const endpoint = isProduct ? 'products' : 'contacts';
-            await fetch(`/api/users/${userId}/${endpoint}/${currentDeleteId}`, {
-              method: 'DELETE',
-            });
-            confirmModal.style.display = 'none';
-            window.location.reload();
-          };
-          
-          cancelDeleteButton.onclick = () => {
-            confirmModal.style.display = 'none';
-            currentDeleteId = null;
-          };
-        });
+      // Manejar clics en los botones de eliminar
+      document.addEventListener('click', async (event) => {
+        if (event.target.classList.contains('delete-button')) {
+          currentDeleteId = event.target.getAttribute('data-id');
+          document.getElementById('confirm-modal').style.display = 'block';
+        }
+      });
+    
+      // Manejar confirmación de eliminación
+      document.getElementById('confirm-delete').addEventListener('click', async () => {
+        if (currentDeleteId) {
+          await fetch(`/api/users/${userId}/contacts/${currentDeleteId}`, {
+            method: 'DELETE'
+          });
+          // Recargar la página para ver los cambios
+          location.reload();
+        }
+      });
+    
+      // Manejar cancelación de eliminación
+      document.getElementById('cancel-delete').addEventListener('click', () => {
+        currentDeleteId = null;
+        document.getElementById('confirm-modal').style.display = 'none';
+      });
+      
+      // Cerrar sesión
+      document.getElementById('logout-button').addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html'; // Redirigir a la página de inicio de sesión
       });
     });
   </script>
