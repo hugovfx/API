@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/css/foundation.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
@@ -14,7 +14,6 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -36,11 +35,6 @@
       font-size: 24px;
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
     .input-group {
       position: relative;
       margin-bottom: 20px;
@@ -50,15 +44,14 @@
       position: absolute;
       top: 50%;
       left: 10px;
-      transform: translateY(-75%);
+      transform: translateY(-50%);
       color: #027f7f;
       font-size: 18px;
-      z-index: 1; /* Ensure icon stays above other elements */
     }
 
     .form-control {
       width: 100%;
-      padding: 10px 10px 10px 40px; /* Add padding to accommodate the icon */
+      padding: 10px 10px 10px 40px;
       border: 1px solid #027f7f;
       border-radius: 5px;
       font-size: 16px;
@@ -72,14 +65,6 @@
       font-size: 16px;
     }
 
-    .input-group select.form-control {
-      padding: 10px 10px 10px 40px; /* Add padding to accommodate the icon */
-      height: auto;
-      appearance: none; /* Remove default select styling */
-      -webkit-appearance: none;
-      -moz-appearance: none;
-    }
-
     .button {
       background-color: #027f7f;
       color: #ffffff;
@@ -90,7 +75,7 @@
       width: 100%;
       border: none;
       text-transform: uppercase;
-      margin-top: 20px; /* Space between the button and the inputs */
+      margin-top: 20px;
     }
 
     .button:hover {
@@ -105,42 +90,59 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Registro de Usuario</h2>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/" id="home-link">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item" id="registerButtonContainer">
+          <a class="nav-link" href="/register.html" id="register-text">Register</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img id="language-img" src="img/language.png" alt="Language" width="20" height="20">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown" id="language-options">
+            <a class="dropdown-item" href="#" data-lang="en">English</a>
+            <a class="dropdown-item" href="#" data-lang="es">Español</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5" style="margin-top: 100px !important;">
+    <h2 id="h2-register-text">User Register</h2>
     <form id="register-form">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-        <input type="text" class="form-control" placeholder="Nombre" id="user_nombre" name="user_nombre" required>
+        <input type="text" class="form-control" placeholder="First Name" id="user_nombre" name="user_nombre" required>
       </div>
 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-        <input type="text" class="form-control" placeholder="Apellido" id="user_apellido" name="user_apellido" required>
+        <input type="text" class="form-control" placeholder="Last name" id="user_apellido" name="user_apellido" required>
       </div>
 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-        <input type="password" class="form-control" placeholder="Contraseña" id="user_password" name="user_password" required>
+        <input type="password" class="form-control" placeholder="Password" id="user_password" name="user_password" required>
       </div>
 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-        <input type="email" class="form-control" placeholder="Correo Electrónico" id="user_email" name="user_email" required>
+        <input type="email" class="form-control" placeholder="Email" id="user_email" name="user_email" required>
       </div>
 
-      <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-globe"></i></span>
-        <select class="form-control" id="user_language" name="user_language" required>
-          <option value="" disabled selected>Seleccionar Idioma</option>
-          <option value="Spanish">Español</option>
-          <option value="English">Inglés</option>
-        </select>
-      </div>
-
-      <button type="submit" class="button">Registrarse</button>
+      <button type="submit" class="button" id="button">Register</button>
     </form>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="register.js"></script>
 </body>
 </html>

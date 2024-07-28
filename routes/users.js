@@ -7,9 +7,9 @@ const authenticateToken = require('../middleware/auth');  // Importa el middlewa
 
 // Registro de usuario
 router.post('/register', async (req, res) => {
-  const { user_nombre, user_apellido, user_password, user_email, user_language } = req.body;
+  const { user_nombre, user_apellido, user_password, user_email } = req.body;
 
-  if (!user_nombre || !user_apellido || !user_password || !user_email || !user_language) {
+  if (!user_nombre || !user_apellido || !user_password || !user_email) {
     return res.status(400).json({ message: 'Todos los campos son requeridos' });
   }
 
@@ -22,8 +22,8 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(user_password, 10);
 
-    await db.query('INSERT INTO users (user_nombre, user_apellido, user_password, user_email, user_language) VALUES (?, ?, ?, ?, ?)',
-      [user_nombre, user_apellido, hashedPassword, user_email, user_language]
+    await db.query('INSERT INTO users (user_nombre, user_apellido, user_password, user_email) VALUES (?, ?, ?, ?)',
+      [user_nombre, user_apellido, hashedPassword, user_email]
     );
 
     res.status(201).json({ message: 'Usuario registrado con éxito' });
@@ -32,6 +32,7 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Error al registrar el usuario' });
   }
 });
+
 
 // Login de usuario
 router.post('/login', async (req, res) => {
@@ -61,7 +62,7 @@ router.post('/login', async (req, res) => {
 // Obtener información del usuario autenticado
 router.get('/me', authenticateToken, async (req, res) => {
   try {
-    const [results] = await db.query('SELECT user_id AS id, user_nombre AS name, user_apellido AS surname, user_email AS email, user_language AS language FROM users WHERE user_id = ?', [req.user.user_id]);
+    const [results] = await db.query('SELECT user_id AS id, user_nombre AS name, user_apellido AS surname, user_email AS email FROM users WHERE user_id = ?', [req.user.user_id]);
     if (results.length === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -71,6 +72,7 @@ router.get('/me', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error al obtener los datos del usuario' });
   }
 });
+
 
 // Obtener información del usuario
 router.get('/:id', async (req, res) => {
