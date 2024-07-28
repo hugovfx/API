@@ -118,12 +118,12 @@
     <form id="login-form">
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-user"></i></span>
-        <input id="email-input" type="email" class="form-control" placeholder="Email" name="user_email" required>
+        <input id="email-placeholder" type="email" class="form-control" placeholder="Email" name="user_email" required>
       </div>
 
       <div class="input-group">
         <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-        <input id="password-input" type="password" class="form-control" placeholder="Password" name="user_password" required>
+        <input id="password-placeholder" type="password" class="form-control" placeholder="Password" name="user_password" required>
       </div>
 
       <button type="submit" class="button float" id="button-submit">Log in</button>
@@ -144,8 +144,8 @@
         "post-product-text": "Post Product",
         "profile-text": "Profile",
         "button-submit": "Log in",
-        "password-input": "Password",
-        "email-input": "Email"
+        "password-placeholder": "Password",
+        "email-placeholder": "Email"
       },
       es: {
         "page-title": "Iniciar Sesión",
@@ -155,8 +155,8 @@
         "post-product-text": "Publicar Producto",
         "profile-text": "Perfil",
         "button-submit": "Iniciar Sesión",
-        "password-input": "Contraseña",
-        "email-input": "Correo Electrónico"
+        "password-placeholder": "Contraseña",
+        "email-placeholder": "Correo Electrónico"
       }
     };
 
@@ -167,7 +167,17 @@
         if (translations[lang][key]) {
           element.textContent = translations[lang][key];
         }
+
+        // Change placeholders
+        const inputs = document.querySelectorAll('input[placeholder]');
+        inputs.forEach(input => {
+            const key = input.id;
+            if (translations[lang][key]) {
+                input.placeholder = translations[lang][key];
+            }
+        });
       });
+      
 
       // Change language image
       const languageImg = document.getElementById('language-img');
@@ -185,6 +195,8 @@
       }
     });
 
+
+    
   </script>
 </body>
 </html>
