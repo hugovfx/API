@@ -63,6 +63,70 @@
       cursor: pointer;
       border-radius: 5px;
     }
+    .contact-list {
+      margin-top: 20px;
+    }
+    .contact-item {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .contact-item button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    
+    /* Estilos para el modal */
+    .modal {
+      display: none; /* Ocultamos el modal por defecto */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 500px;
+    }
+    .modal-header {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    .modal-footer {
+      text-align: right;
+    }
+    .modal-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .modal-button.cancel {
+      background-color: #f44336;
+    }
   </style>
 </head>
 <body>
@@ -78,6 +142,13 @@
       </div>
     </div>
     
+    <div class="contact-list">
+      <h2>Formas de Contacto</h2>
+      <div id="contacts">
+        <!-- Contactos del usuario se agregarán aquí dinámicamente -->
+      </div>
+    </div>
+
     <div class="contact-form">
       <h2>Registrar Forma de Contacto</h2>
       <form id="contact-form">
@@ -86,7 +157,7 @@
           <option value="">Seleccione</option>
           <option value="email">Email</option>
           <option value="phone">Teléfono</option>
-          <option value="social">Red Social</option>
+          <option value="instagram">Instagram</option>
         </select>
         
         <label for="contact-value">Valor:</label>
@@ -97,20 +168,38 @@
     </div>
   </div>
 
+  <!-- Modal de confirmación para eliminar -->
+  <div id="confirm-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirmación</h2>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que quieres eliminar este elemento?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirm-delete" class="modal-button">Eliminar</button>
+        <button id="cancel-delete" class="modal-button cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let currentDeleteId = null;
+    
     document.addEventListener('DOMContentLoaded', async () => {
       const userId = 1; // Reemplaza con el ID del usuario autenticado
-
+    
       // Obtener datos del usuario
       const userResponse = await fetch(`/api/users/${userId}`);
       const user = await userResponse.json();
       document.getElementById('user-name').textContent = user.name;
-
+    
       // Obtener productos del usuario
       const productsResponse = await fetch(`/api/users/${userId}/products`);
       const products = await productsResponse.json();
       const productsContainer = document.getElementById('products');
-
+    
       products.forEach(product => {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
@@ -122,20 +211,24 @@
               <h3>${product.name}</h3>
               <p>Precio: ${product.price} $</p>
               <p>${product.description}</p>
+              <button onclick="openConfirmModal(${product.id}, 'product')">Eliminar Producto</button>
             </div>
           </div>
         `;
         
         productsContainer.appendChild(productCard);
       });
-
+    
+      // Cargar contactos
+      await loadContacts();
+    
       // Manejar envío del formulario de contacto
       document.getElementById('contact-form').addEventListener('submit', async (event) => {
         event.preventDefault();
-
+    
         const contactType = document.getElementById('contact-type').value;
         const contactValue = document.getElementById('contact-value').value;
-
+    
         const response = await fetch(`/api/users/${userId}/contacts`, {
           method: 'POST',
           headers: {
@@ -146,15 +239,101 @@
             contact_value: contactValue
           })
         });
-
+    
         if (response.ok) {
           alert('Forma de contacto agregada exitosamente');
           document.getElementById('contact-form').reset();
+          await loadContacts(); // Recargar la lista de contactos
         } else {
           alert('Error al agregar la forma de contacto');
         }
       });
     });
+    
+    // Mostrar modal de confirmación
+    function openConfirmModal(id, type) {
+      currentDeleteId = { id, type };
+      document.getElementById('confirm-modal').style.display = 'block';
+    }
+    
+    // Eliminar contacto
+    function deleteContact() {
+      const userId = 1; // Asegúrate de que el userId sea dinámico o correcto
+      fetch(`/api/users/${userId}/contacts/${currentDeleteId.id}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Forma de contacto eliminada');
+          loadContacts(); // Recargar la lista de contactos
+        } else {
+          alert('Error al eliminar la forma de contacto');
+        }
+      })
+      .catch(error => {
+        console.error('Error al eliminar la forma de contacto:', error);
+      });
+    }
+    
+    // Eliminar producto
+    function deleteProduct() {
+      fetch(`/api/products/${currentDeleteId.id}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Producto eliminado exitosamente') {
+          alert('Producto eliminado exitosamente');
+          location.reload(); // Recargar la página para reflejar los cambios
+        } else {
+          alert('Error al eliminar el producto');
+        }
+      })
+      .catch(error => {
+        console.error('Error al eliminar el producto:', error);
+      });
+    }
+    
+    // Confirmar eliminación
+    document.getElementById('confirm-delete').addEventListener('click', () => {
+      if (currentDeleteId.type === 'contact') {
+        deleteContact();
+      } else if (currentDeleteId.type === 'product') {
+        deleteProduct();
+      }
+      document.getElementById('confirm-modal').style.display = 'none';
+    });
+    
+    // Cancelar eliminación
+    document.getElementById('cancel-delete').addEventListener('click', () => {
+      document.getElementById('confirm-modal').style.display = 'none';
+    });
+    
+    // Cargar contactos
+    async function loadContacts() {
+      const userId = 1; // Reemplaza con el ID del usuario autenticado
+      try {
+        const response = await fetch(`/api/users/${userId}/contacts`);
+        const contacts = await response.json();
+        const contactsContainer = document.getElementById('contacts');
+        contactsContainer.innerHTML = ''; // Limpiar contactos existentes
+    
+        contacts.forEach(contact => {
+          const contactItem = document.createElement('div');
+          contactItem.className = 'contact-item';
+          
+          contactItem.innerHTML = `
+            <div>
+              <strong>${contact.contact_type.charAt(0).toUpperCase() + contact.contact_type.slice(1)}:</strong> ${contact.contact_value}
+            </div>
+            <button onclick="openConfirmModal(${contact.contact_id}, 'contact')">Eliminar</button>`;
+          
+          contactsContainer.appendChild(contactItem);
+        });
+      } catch (error) {
+        console.error('Error al cargar los contactos:', error);
+      }
+    }
   </script>
 </body>
 </html>

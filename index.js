@@ -4,9 +4,12 @@ const cors = require('cors');
 const usersRouter = require('./routes/users');
 const categoriesRouter = require('./routes/categories');
 const productsRouter = require('./routes/products');
-
+require('dotenv').config();
 const app = express();
 const port = 3000;
+
+require('dotenv').config();
+
 
 // Middleware
 app.use(cors());

@@ -98,4 +98,40 @@ router.post('/:id/contacts', async (req, res) => {
   }
 });
 
+
+// Obtener formas de contacto del usuario
+router.get('/:id/contacts', async (req, res) => {
+  try {
+    const [results] = await db.query('SELECT id AS contact_id, contact_type, contact_value FROM user_contacts WHERE user_id = ?', [req.params.id]);
+    res.json(results);
+  } catch (err) {
+    console.error('Error al obtener las formas de contacto:', err);
+    res.status(500).json({ message: 'Error al obtener las formas de contacto' });
+  }
+});
+
+// Eliminar forma de contacto
+router.delete('/:id/contacts/:contactId', async (req, res) => {
+  try {
+    await db.query('DELETE FROM user_contacts WHERE id = ? AND user_id = ?', [req.params.contactId, req.params.id]);
+    res.status(200).json({ message: 'Forma de contacto eliminada' });
+  } catch (err) {
+    console.error('Error al eliminar la forma de contacto:', err);
+    res.status(500).json({ message: 'Error al eliminar la forma de contacto' });
+  }
+});
+
+
+// Eliminar producto
+router.delete('/:id/products/:productId', async (req, res) => {
+  const { id, productId } = req.params;
+  try {
+    await db.query('DELETE FROM products WHERE user_id = ? AND id = ?', [id, productId]);
+    res.status(200).json({ message: 'Producto eliminado exitosamente' });
+  } catch (err) {
+    console.error('Error al eliminar el producto:', err);
+    res.status(500).json({ message: 'Error al eliminar el producto' });
+  }
+});
+
 module.exports = router;

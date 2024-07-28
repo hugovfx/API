@@ -19,21 +19,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formData = new FormData(form);
     const token = localStorage.getItem('token'); // Obtener el token del almacenamiento local
 
-    const response = await fetch('/api/products', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
-    });
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (response.ok) {
-      alert(result.message);
-      form.reset();
-    } else {
-      alert(result.message);
+      if (response.ok) {
+        alert(result.message);
+        form.reset();
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      alert('Ocurrió un error al publicar el producto.');
     }
   });
 });

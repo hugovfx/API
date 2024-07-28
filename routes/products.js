@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const axios = require('axios');
+const cloudinary = require('../config/cloudinaryConfig'); // Asegúrate de que la ruta sea correcta
 const db = require('../db');
 const auth = require('../middleware/auth');
+const streamifier = require('streamifier'); // Importar streamifier
+require('dotenv').config();
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -14,39 +16,63 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
   if (!imageFile) return res.status(400).json({ message: 'Se requiere una imagen' });
 
-  const base64Image = imageFile.buffer.toString('base64');
-
   try {
-    const response = await axios.post('https://api.imgur.com/3/image', {
-      image: base64Image,
-      type: 'base64'
-    }, {
-      headers: {
-        Authorization: `Client-ID TU_CLIENT_ID`
+    // Crear un stream de la imagen
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: 'image' },
+      async (error, result) => {
+        if (error) {
+          console.error('Error al subir la imagen:', error);
+          return res.status(500).json({ message: 'Error al subir la imagen' });
+        }
+
+        const imageUrl = result.secure_url;
+
+        try {
+          // Registrar la imagen en la base de datos
+          const [imageResult] = await db.query('INSERT INTO images (url) VALUES (?)', [imageUrl]);
+          const imageId = imageResult.insertId;
+
+          // Registrar el producto en la base de datos
+          await db.query('INSERT INTO products (name, price, category_id, description, image_id, user_id) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, price, category_id, description, imageId, req.user_id]
+          );
+
+          res.status(201).json({ message: 'Producto publicado' });
+        } catch (dbError) {
+          console.error('Error al registrar la imagen o el producto:', dbError);
+          res.status(500).json({ message: 'Error al registrar la imagen o el producto' });
+        }
       }
-    });
-
-    const imageUrl = response.data.data.link;
-    const [imageResult] = await db.query('INSERT INTO images (url) VALUES (?)', [imageUrl]);
-    const imageId = imageResult.insertId;
-
-    await db.query('INSERT INTO products (name, price, category_id, description, image_id, user_id) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, price, category_id, description, imageId, req.user_id]
     );
 
-    res.status(201).json({ message: 'Producto publicado' });
+    // Subir el archivo como un stream
+    streamifier.createReadStream(imageFile.buffer).pipe(stream);
   } catch (error) {
-    console.error('Error al subir la imagen o registrar el producto:', error);
+    console.error('Error al procesar la solicitud:', error);
     res.status(500).json({ message: 'Error al procesar la solicitud' });
   }
 });
 
-// Obtener la lista de productos
+// Obtener la lista de productos con opción de filtro por categoría
 router.get('/', async (req, res) => {
+  const categoryId = req.query.category_id;
+  let query = `
+    SELECT p.id, p.name, p.price, p.description, p.active, c.name AS category_name, i.url AS image_url 
+    FROM products p 
+    JOIN categories c ON p.category_id = c.id 
+    JOIN images i ON p.image_id = i.id 
+    WHERE p.active = 1
+  `;
+  let params = [];
+
+  if (categoryId && categoryId !== 'all') {
+    query += ' AND p.category_id = ?';
+    params.push(categoryId);
+  }
+
   try {
-    const [results] = await db.query(
-      'SELECT p.id, p.name, p.price, p.description, p.active, c.name AS category_name, i.url AS image_url FROM products p JOIN categories c ON p.category_id = c.id JOIN images i ON p.image_id = i.id WHERE p.active = 1'
-    );
+    const [results] = await db.query(query, params);
     res.json(results);
   } catch (err) {
     console.error('Error al obtener los productos:', err);
@@ -88,7 +114,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Eliminar producto
+router.delete('/:id', async (req, res) => {
+  const productId = parseInt(req.params.id);
+  try {
+    // Obtener la URL de la imagen asociada al producto
+    const [product] = await db.query('SELECT image_id FROM products WHERE id = ?', [productId]);
+    
+    if (product.length === 0) {
+      return res.status(404).json({ message: 'Producto no encontrado' });
+    }
 
+    const imageId = product[0].image_id;
 
+    // Eliminar el producto
+    await db.query('DELETE FROM products WHERE id = ?', [productId]);
+
+    // Eliminar la imagen asociada (si existe)
+    if (imageId) {
+      await db.query('DELETE FROM images WHERE id = ?', [imageId]);
+    }
+
+    res.status(200).json({ message: 'Producto eliminado exitosamente' });
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error);
+    res.status(500).json({ message: 'Error al eliminar el producto' });
+  }
+});
 
 module.exports = router;

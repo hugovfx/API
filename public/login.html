@@ -4,18 +4,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/css/foundation.min.css">
+  <style>
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .login h2 {
+      color: #027f7f;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group-addon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      color: #027f7f;
+      font-size: 18px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 10px 10px 40px; /* Add padding to accommodate the icon */
+      border: 1px solid #027f7f;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #333;
+      box-sizing: border-box;
+      vertical-align: middle;
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+      font-size: 16px;
+    }
+
+    .button.float {
+      background-color: #027f7f;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      border: none;
+      text-transform: uppercase;
+    }
+
+    .button.float:hover {
+      background-color: #025e5e;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .login {
+        padding: 30px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Iniciar Sesión</h1>
-  <form id="login-form">
-    <label for="user_email">Correo Electrónico:</label>
-    <input type="email" id="user_email" name="user_email" required><br>
+  <div class="login">
+    <h2>Iniciar Sesión</h2>
+    <form id="login-form">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+        <input type="email" class="form-control" placeholder="Correo Electrónico" name="user_email" required>
+      </div>
 
-    <label for="user_password">Contraseña:</label>
-    <input type="password" id="user_password" name="user_password" required><br>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+        <input type="password" class="form-control" placeholder="Contraseña" name="user_password" required>
+      </div>
 
-    <button type="submit">Iniciar Sesión</button>
-  </form>
+      <button type="submit" class="button float">Iniciar Sesión</button>
+    </form>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
   <script src="login.js"></script>
 </body>
 </html>

@@ -4,29 +4,155 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publicar Producto</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/css/foundation.min.css">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      color: #027f7f;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #027f7f;
+    }
+
+    input, select, textarea {
+      border: 1px solid #027f7f;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .file-upload-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid #027f7f;
+      border-radius: 5px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+
+    .file-upload-label {
+      flex-grow: 2;
+      padding: 10px;
+      color: #333;
+      text-align: left;
+      border-radius: 5px 0 0 5px;
+      border-right: 1px solid #027f7f;
+    }
+
+    .file-upload-button {
+      padding: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      color: #027f7f;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .file-upload-button input[type="file"] {
+      display: none;
+    }
+
+    button {
+      background-color: #027f7f;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #025e5e;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container {
+        padding: 30px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Publicar Producto</h1>
-  <form id="post-product-form" enctype="multipart/form-data">
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" name="name" required><br>
+  <div class="container">
+    <h1>Publicar Producto</h1>
+    <form id="post-product-form" enctype="multipart/form-data">
+      <label for="name">Nombre:</label>
+      <input type="text" id="name" name="name" required>
 
-    <label for="price">Precio:</label>
-    <input type="number" id="price" name="price" step="0.01" required><br>
+      <label for="price">Precio:</label>
+      <input type="number" id="price" name="price" step="0.01" required>
 
-    <label for="category_id">Categoría:</label>
-    <select id="category_id" name="category_id" required>
-      <!-- Las opciones se cargarán dinámicamente -->
-    </select><br>
+      <label for="category_id">Categoría:</label>
+      <select id="category_id" name="category_id" required>
+        <!-- Las opciones se cargarán dinámicamente -->
+      </select>
 
-    <label for="description">Descripción:</label>
-    <textarea id="description" name="description" required></textarea><br>
+      <label for="description">Descripción:</label>
+      <textarea id="description" name="description" required></textarea>
 
-    <label for="image">Imagen:</label>
-    <input type="file" id="image" name="image" accept="image/*" required><br>
+      <label for="image">Imagen:</label>
+      <div class="file-upload-wrapper">
+        <span class="file-upload-label">No se ha seleccionado ningún archivo</span>
+        <label class="file-upload-button">
+          Seleccionar imagen
+          <input type="file" id="image" name="image" accept="image/*" required>
+        </label>
+      </div>
 
-    <button type="submit">Publicar</button>
-  </form>
+      <button type="submit">Publicar</button>
+    </form>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.6.3/js/foundation.min.js"></script>
   <script src="postProducto.js"></script>
+  <script>
+    // Script para actualizar el nombre del archivo seleccionado
+    document.getElementById('image').addEventListener('change', function(event) {
+      const fileName = event.target.files.length > 0 ? event.target.files[0].name : 'No se ha seleccionado ningún archivo';
+      document.querySelector('.file-upload-label').textContent = fileName;
+    });
+  </script>
 </body>
 </html>
