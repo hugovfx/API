@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           <h3>${product.name}</h3>
           <p>Precio: ${product.price} $</p>
           <p>${product.description}</p>
-          <button class="delete-button" data-id="${product.id}" data-type="product">Delete</button>
+          <button class="delete-button" data-id="${product.id}" data-type="product">X</button>
         </div>
       </div>
     `;
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     contactItem.innerHTML = `
       <span>${contact.contact_type}: ${contact.contact_value}</span>
-      <button class="delete-button" data-id="${contact.contact_id}" data-type="contact">Delete</button>
+      <button class="delete-button" id="delete-button-2" data-id="${contact.contact_id}" data-type="contact">Delete</button>
     `;
     contactsContainer.appendChild(contactItem);
   });
