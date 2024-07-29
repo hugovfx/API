@@ -186,7 +186,10 @@
           <h3 id="modal-product-name"></h3>
           <p id="modal-product-price"></p>
           <p id="modal-product-description"></p>
-          <h5 id="modal-product-contact">Contact details of </h5>
+          <div style="display: flex;">
+            <h5 id="modal-product-contact" style="padding-right: 10px;">Contact details of </h5>
+            <h5 id="modal-name-owner"></h5>
+          </div>
           <div id="modal-contact-info"></div>
         </div>
         <div class="modal-footer">
@@ -280,7 +283,7 @@
             document.getElementById('modal-product-image').src = product.image_url;
             document.getElementById('modal-product-price').textContent = '$'+product.price;
             document.getElementById('modal-product-description').textContent = product.description;
-            document.getElementById('modal-product-contact').textContent += product.user_name+':';
+            document.getElementById('modal-name-owner').textContent = product.user_name+':';
 
             let contactInfoHTML = '';
             if (product.contacts && product.contacts.length > 0) {
