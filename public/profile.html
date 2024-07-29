@@ -159,16 +159,6 @@
     .modal-button.cancel {
       background-color: #f44336;
     }
-
-    .btn-addcontact{
-      display: flex; 
-      width: 100%; 
-      padding: 0px; 
-      height: 42px; 
-      align-items: center; 
-      justify-content: center;
-      background-color: #027f7f !important;
-    }
   </style>
 </head>
 <body>
@@ -185,8 +175,8 @@
             <img id="language-img" src="img/language.png" alt="Language" width="20" height="20">
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="languageDropdown" id="language-options">
-            <a class="dropdown-item" href="#" data-lang="en" id="en-button">English</a>
-            <a class="dropdown-item" href="#" data-lang="es">Spanish</a>
+            <a class="dropdown-item" href="#" data-lang="en">English</a>
+            <a class="dropdown-item" href="#" data-lang="es">Español</a>
           </div>
         </li>
         <li class="nav-item">
@@ -199,7 +189,7 @@
   <div class="container" id="profile-container" style="display:none; margin-top: 100px;">
     <div class="profile-header" style="display: flex;">
       <h1 id="welcome-text" style="margin-right: 10px;">Welcome</h1>
-      <h1 id="user-name" placeholder="User Name"></h1>
+      <h1 id="user-name" placeholder="User Name"> </h1>
     </div>
     
     <div class="products-list">
@@ -225,8 +215,10 @@
           <option value="phone">Phone number</option>
           <option value="instagram">Instagram</option>
         </select>
-        <input type="text" id="contact-value" name="contact-value" required placeholder="Enter value">
-        <button id="submit-button" type="submit" style=" " class="btn-addcontact">Add Contact</button>
+        <div style="display: flex; justify-content: space-between;">
+          <input type="text" id="contact-value" name="contact-value" required placeholder="Enter value" style="display: flex; width: 75%;">
+          <button id="submit-button" type="submit" style="display: flex; width: 24%; padding: 0px; height: 42px; align-items: center; justify-content: center; background-color: #027f7f !important;">Add Contact</button>
+        </div>
       </form>
     </div>
   </div>
@@ -246,6 +238,39 @@
       </div>
     </div>
   </div>
+
+  <!-- FOOTER START -->
+  <footer class="bg-dark text-white mt-5">
+    <div class="container2">
+      <div class="row py-4">
+        <div class="col-md-3">
+          <img src="img/logo.png" alt="Logo" style="width: 200px;">
+        </div>
+        <div class="col-md-6">
+          <h5 id="about">About us</h5>
+          <p id="abouttext">We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.</p>
+        </div>
+        <div class="col-md-3">
+          <h5 id="links">Quick links</h5>
+          <ul class="list-unstyled">
+            <li><a href="/" class="text-white" id="home-link">Home</a></li>
+            <li><a href="/login.html" class="text-white" id="login-text">Login</a></li>
+            <li><a href="/register.html" class="text-white" id="register-text">Register</a></li>
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h5 id="contact">Contact us</h5>
+          <ul class="list-unstyled">
+            <li class="text-white"><p id="email">Email</p> <a href="mailto:tianguisutch@gmail.com" class="text-white">tianguisutch@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>  
+    <div class="bg-secondary text-center py-3">
+      <p class="mb-0">© 2024 Tianguis UTCH.</p>
+    </div>
+  </footer>
+    <!-- FOOTER END -->
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -295,20 +320,38 @@
       }
     };
 
-    // Función para cambiar el idioma
     function changeLanguage(lang) {
-      document.querySelectorAll('[id]').forEach(el => {
-        const key = el.id;
-        if (translations[lang][key]) {
-          el.textContent = translations[lang][key];
-          el.placeholder = translations[lang][key];
-        }
+    const elements = document.querySelectorAll('[id]');
+    elements.forEach(element => {
+      const key = element.id;
+      if (translations[lang][key]) {
+        element.textContent = translations[lang][key];
+      }
+
+      // Cambiar los placeholders de los inputs
+      const inputs = document.querySelectorAll('input[placeholder]');
+      inputs.forEach(input => {
+          const key = input.id;
+          if (translations[lang][key]) {
+              input.placeholder = translations[lang][key];
+          }
       });
+    });
+
+    // Cambiar imagen del idioma
+    const languageImg = document.getElementById('language-img');
+    if (lang === 'es') {
+      languageImg.src = 'img/MXlenguaje.png';
+    } else {
+      languageImg.src = 'img/language.png';
     }
+  }
+
 
     // Manejador de eventos para el botón de cerrar sesión
     document.getElementById('logout-button').addEventListener('click', function() {
-      // Aquí puedes añadir el código para cerrar sesión
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
       alert('Cerrar sesión');
     });
 
@@ -348,18 +391,7 @@
       }
     });
 
-    // Inicializar el idioma al cargar la página
-    document.addEventListener('DOMContentLoaded', function() {
-      changeLanguage('en'); // Cambiado a 'en' para inglés
-    });
-
-    // Manejador de eventos para cambiar el idioma
-    document.getElementById('language-options').addEventListener('click', function(event) {
-      if (event.target.tagName === 'A') {
-        const lang = event.target.getAttribute('data-lang');
-        changeLanguage(lang);
-      }
-    });
+    
 
 
     let currentDeleteId = null;
@@ -480,11 +512,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('confirm-modal').style.display = 'none';
   });
 
-  // Cerrar sesión
-  document.getElementById('logout-button').addEventListener('click', () => {
-    localStorage.removeItem('token');
-    window.location.href = 'index.html'; // Redirigir a la página de inicio de sesión
-  });
 });
 
 
