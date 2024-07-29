@@ -187,14 +187,14 @@
   </nav>
 
   <div class="container" id="profile-container" style="display:none; margin-top: 100px;">
-    <div class="profile-header">
+    <div class="profile-header" style="display: flex;">
       <h1 id="welcome-text" style="margin-right: 10px;">Welcome</h1>
       <h1 id="user-name" placeholder="User Name"> </h1>
     </div>
     
     <div class="products-list">
       <h2 id="products-title">Published Products</h2>
-      <div id="products" class="row">
+      <div id="products">
         <!-- Productos del usuario se agregarán aquí dinámicamente -->
       </div>
     </div>
@@ -218,7 +218,7 @@
         
         <input type="text" id="contact-value" name="contact-value" required placeholder="Enter value">
 
-        <button type="submit">Add Contact</button>
+        <button type="submit" style="width: 100%; background-color: #027f7f !important;">Add Contact</button>
       </form>
     </div>
   </div>
@@ -238,6 +238,40 @@
       </div>
     </div>
   </div>
+
+     <!-- FOOTER START -->
+     <footer class="bg-dark text-white mt-5">
+      <div class="container2">
+        <div class="row py-4">
+          <div class="col-md-3">
+            <img src="img/logo.png" alt="Logo" style="width: 200px;">
+          </div>
+          <div class="col-md-6">
+            <h5 id="about">About us</h5>
+            <p id="abouttext">We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.</p>
+          </div>
+          <div class="col-md-3">
+            <h5 id="links">Quick links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-white" id="home-link">Home</a></li>
+              <li><a href="/login.html" class="text-white" id="login-text">Login</a></li>
+              <li><a href="/register.html" class="text-white" id="register-text">Register</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h5 id="contact">Contact us</h5>
+            <ul class="list-unstyled">
+              <li class="text-white"><p id="email">Email</p> <a href="mailto:tianguisutch@gmail.com" class="text-white">tianguisutch@gmail.com</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>  
+      <div class="bg-secondary text-center py-3">
+        <p class="mb-0">© 2024 Tianguis UTCH.</p>
+      </div>
+    </footer>
+    
+      <!-- FOOTER END -->
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -261,7 +295,12 @@
         "cancel-delete": "Cancel",
         "contact-value-placeholder": "Enter value",
         "select-phone": "Phone Number",
-        "delete-button-2": "Delete"
+        "delete-button-2": "Delete",
+        "welcome-text": "Welcome",
+        "about":"About us",
+        "abouttext":"We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.",
+        "links":"Quick links",
+        "contact":"Contact us"
       },
       es: {
         "page-title": "Perfil del Usuario",
@@ -279,7 +318,12 @@
         "cancel-delete": "Cancelar",
         "contact-value-placeholder": "Ingresar valor",
         "select-phone": "Teléfono",
-        "delete-button-2": "Eliminar"
+        "delete-button-2": "Eliminar",
+        "welcome-text": "Bienvenido",
+        "abouttext":"Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.",
+        "links":"Enlaces rapidos",
+        "contact":"Contactanos",
+        "about":"Acerca de nosotros"
       }
     };
 
