@@ -35,7 +35,13 @@ const translations = {
     "user_apellido": "Last name",
     "user_password": "Password",
     "user_email": "Email",
-    "h2-register-text": "User Register"
+    "h2-register-text": "User Register",
+    
+
+    "about":"About us",
+        "abouttext":"We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.",
+        "links":"Quick links",
+        "contact":"Contact us",
   },
   es: {
     "home-link": "Inicio",
@@ -45,7 +51,12 @@ const translations = {
     "user_apellido": "Apellido",
     "user_password": "Contraseña",
     "user_email": "Correo Electrónico",
-    "h2-register-text": "Registro de Usuario"
+    "h2-register-text": "Registro de Usuario",
+    
+ "abouttext":"Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.",
+ "links":"Enlaces rapidos",
+ "contact":"Contactanos",
+ "about":"Acerca de nosotros"
   }
 };
 
