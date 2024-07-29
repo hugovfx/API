@@ -187,7 +187,7 @@
   </nav>
 
   <div class="container" id="profile-container" style="display:none; margin-top: 100px;">
-    <div class="profile-header">
+    <div class="profile-header" style="display: flex;">
       <h1 id="welcome-text" style="margin-right: 10px;">Welcome</h1>
       <h1 id="user-name" placeholder="User Name"> </h1>
     </div>
@@ -215,10 +215,10 @@
           <option value="phone">Phone number</option>
           <option value="instagram">Instagram</option>
         </select>
-        
-        <input type="text" id="contact-value" name="contact-value" required placeholder="Enter value">
-        
-        <button type="submit">Add Contact</button>
+        <div style="display: flex; justify-content: space-between;">
+          <input type="text" id="contact-value" name="contact-value" required placeholder="Enter value" style="display: flex; width: 75%;">
+          <button id="submit-button" type="submit" style="display: flex; width: 24%; padding: 0px; height: 42px; align-items: center; justify-content: center;">Add Contact</button>
+        </div>
       </form>
     </div>
   </div>
@@ -260,7 +260,9 @@
         "confirm-delete": "Delete",
         "cancel-delete": "Cancel",
         "contact-value-placeholder": "Enter value",
-        "select-phone": "Phone Number"
+        "select-phone": "Phone Number",
+        "welcome-text": "Welcome",
+        "submit-button": "Add Contact"
       },
       es: {
         "page-title": "Perfil del Usuario",
@@ -277,7 +279,9 @@
         "confirm-delete": "Eliminar",
         "cancel-delete": "Cancelar",
         "contact-value-placeholder": "Ingresar valor",
-        "select-phone": "Teléfono"
+        "select-phone": "Teléfono",
+        "welcome-text": "Bienvenido",
+        "submit-button": "Añadir contacto"
       }
     };
 
