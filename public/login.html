@@ -190,7 +190,7 @@
         "links":"Quick links",
         "contact":"Contact us",
       },
-      es: {
+      "es": {
         "page-title": "Iniciar Sesión",
         "home-link": "Inicio",
         "login-text": "Iniciar Sesión",
@@ -200,11 +200,10 @@
         "button-submit": "Iniciar Sesión",
         "password-placeholder": "Contraseña",
         "email-placeholder": "Correo Electrónico",
-        
- "abouttext":"Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.",
-        "links":"Enlaces rapidos",
-        "contact":"Contactanos",
-        "about":"Acerca de nosotros"
+        "abouttext": "Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competitividad.",
+        "links": "Enlaces rápidos",
+        "contact": "Contáctanos",
+        "about": "Acerca de nosotros"
       }
     };
 
@@ -226,6 +225,14 @@
         });
       });
       
+      // Change placeholders
+      const inputs = document.querySelectorAll('input[placeholder]');
+      inputs.forEach(input => {
+          const key = input.id;
+          if (translations[lang][key]) {
+              input.placeholder = translations[lang][key];
+          }
+      });
 
       // Change language image
       const languageImg = document.getElementById('language-img');
@@ -243,7 +250,46 @@
       }
     });
 
+    const languageDropdown = document.getElementById('languageDropdown');
+    const languageOptions = document.getElementById('language-options');
 
+    languageOptions.addEventListener('click', (event) => {
+      const lang = event.target.getAttribute('data-lang');
+      if (lang) {
+        localStorage.setItem('language', lang);
+        applyTranslations(lang);
+      }
+    });
+
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(element => {
+        const key = element.id;
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+        const languageImg = document.getElementById('language-img');
+        if (lang === 'es') {
+          languageImg.src = 'img/MXlenguaje.png';
+        } else {
+          languageImg.src = 'img/language.png';
+        }
+      });
+
+      // Change placeholders
+      const inputs = document.querySelectorAll('input[placeholder]');
+      inputs.forEach(input => {
+          const key = input.id;
+          if (translations[lang][key]) {
+              input.placeholder = translations[lang][key];
+          }
+      });
+    }
+
+    // Apply translations based on stored preference
+    const storedLanguage = localStorage.getItem('language') || 'en';
+    applyTranslations(storedLanguage);
+    
     
   </script>
 </body>

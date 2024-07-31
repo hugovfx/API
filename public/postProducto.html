@@ -146,14 +146,14 @@
       </div>
 
       <div class="form-group">
-        <textarea id="description" name="description" class="form-control" placeholder="Description" required></textarea>
+        <textarea id="description" name="description" class="form-control" required></textarea>
       </div>
 
       <div class="form-group">
         <div class="file-upload-wrapper">
           <span class="file-upload-label" id="file-name">No file selected</span>
-          <label class="file-upload-button" id="img-select">
-            Select image
+          <label class="file-upload-button" id="img-select" style="justify-content: center !important;">
+            <img src="img/img.png" alt="" style="width: 25px !important; height: 25px !important;">
             <input type="file" id="image" name="image" accept="image/*" required>
           </label>
         </div>
@@ -218,7 +218,6 @@
         "description": "Description",
         "image": "Image",
         "button-submit": "Post",
-        "img-select": "Select image",
         "file-name": "No file selected",
         "category-text": "Category",
         "publicar-producto": "Publish Product",
@@ -237,7 +236,6 @@
         "description": "Descripción",
         "image": "Imagen",
         "button-submit": "Publicar",
-        "img-select": "Seleccionar imagen",
         "file-name": "No se ha seleccionado ningún archivo",
         "category-text": "Categoria",
         "publicar-producto": "Publicar Producto",
@@ -265,6 +263,15 @@
             }
         });
       });
+      
+      // Change placeholders
+      const inputs = document.querySelectorAll('input[placeholder]');
+      inputs.forEach(input => {
+          const key = input.id;
+          if (translations[lang][key]) {
+              input.placeholder = translations[lang][key];
+          }
+      });
 
       // Change language image
       const languageImg = document.getElementById('language-img');
@@ -281,6 +288,46 @@
         changeLanguage(lang);
       }
     });
+
+    const languageDropdown = document.getElementById('languageDropdown');
+    const languageOptions = document.getElementById('language-options');
+
+    languageOptions.addEventListener('click', (event) => {
+      const lang = event.target.getAttribute('data-lang');
+      if (lang) {
+        localStorage.setItem('language', lang);
+        applyTranslations(lang);
+      }
+    });
+
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(element => {
+        const key = element.id;
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+        const languageImg = document.getElementById('language-img');
+        if (lang === 'es') {
+          languageImg.src = 'img/MXlenguaje.png';
+        } else {
+          languageImg.src = 'img/language.png';
+        }
+      });
+
+      // Change placeholders
+      const inputs = document.querySelectorAll('input[placeholder]');
+      inputs.forEach(input => {
+          const key = input.id;
+          if (translations[lang][key]) {
+              input.placeholder = translations[lang][key];
+          }
+      });
+    }
+
+    // Apply translations based on stored preference
+    const storedLanguage = localStorage.getItem('language') || 'en';
+    applyTranslations(storedLanguage);
   </script>
 </body>
 </html>

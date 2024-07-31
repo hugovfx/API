@@ -43,7 +43,7 @@ const translations = {
         "links":"Quick links",
         "contact":"Contact us",
   },
-  es: {
+  "es": {
     "home-link": "Inicio",
     "login-text": "Iniciar Sesión",
     "button": "Registrarse",
@@ -52,11 +52,10 @@ const translations = {
     "user_password": "Contraseña",
     "user_email": "Correo Electrónico",
     "h2-register-text": "Registro de Usuario",
-    
- "abouttext":"Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.",
- "links":"Enlaces rapidos",
- "contact":"Contactanos",
- "about":"Acerca de nosotros"
+    "abouttext": "Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competitividad.",
+    "links": "Enlaces rápidos",
+    "contact": "Contáctanos",
+    "about": "Acerca de nosotros"
   }
 };
 
@@ -71,25 +70,20 @@ function changeLanguage(lang) {
     // Change placeholders
     const inputs = document.querySelectorAll('input[placeholder]');
     inputs.forEach(input => {
+        const key = input.id;
+        if (translations[lang][key]) {
+            input.placeholder = translations[lang][key];
+        }
+    });
+  });
+  
+  // Change placeholders
+  const inputs = document.querySelectorAll('input[placeholder]');
+  inputs.forEach(input => {
       const key = input.id;
       if (translations[lang][key]) {
-        input.placeholder = translations[lang][key];
+          input.placeholder = translations[lang][key];
       }
-    });
-
-    // Change select options
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => {
-      const key = select.id;
-      if (translations[lang][key]) {
-        const options = select.querySelectorAll('option');
-        options.forEach(option => {
-          if (option.value === "") {
-            option.textContent = translations[lang][key];
-          }
-        });
-      }
-    });
   });
 
   // Change language image
@@ -107,3 +101,43 @@ document.getElementById('language-options').addEventListener('click', function (
     changeLanguage(lang);
   }
 });
+
+const languageDropdown = document.getElementById('languageDropdown');
+const languageOptions = document.getElementById('language-options');
+
+languageOptions.addEventListener('click', (event) => {
+  const lang = event.target.getAttribute('data-lang');
+  if (lang) {
+    localStorage.setItem('language', lang);
+    applyTranslations(lang);
+  }
+});
+
+function applyTranslations(lang) {
+  const elements = document.querySelectorAll('[id]');
+  elements.forEach(element => {
+    const key = element.id;
+    if (translations[lang][key]) {
+      element.textContent = translations[lang][key];
+    }
+    const languageImg = document.getElementById('language-img');
+    if (lang === 'es') {
+      languageImg.src = 'img/MXlenguaje.png';
+    } else {
+      languageImg.src = 'img/language.png';
+    }
+  });
+
+  // Change placeholders
+  const inputs = document.querySelectorAll('input[placeholder]');
+  inputs.forEach(input => {
+      const key = input.id;
+      if (translations[lang][key]) {
+          input.placeholder = translations[lang][key];
+      }
+  });
+}
+
+// Apply translations based on stored preference
+const storedLanguage = localStorage.getItem('language') || 'en';
+applyTranslations(storedLanguage);

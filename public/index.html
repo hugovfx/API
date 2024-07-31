@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catalog</title>
+  <title id="title-text">Catalog</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/footerstyle.css">
   <style>
@@ -266,7 +266,7 @@
               <div class="card-body">
                 <h5 class="card-title">${product.name}</h5>
                 <p class="card-text">$${product.price}</p>
-                <button class="buy-button btn btn-primary" data-id="${product.id}">More</button>
+                <button class="buy-button btn btn-primary" id="more-button" data-id="${product.id}">More</button>
               </div>
             </div>
           `;
@@ -367,22 +367,22 @@
         "button-submit": "Log in",
         "password-placeholder": "Password",
         "email-placeholder": "Email",
-        "welcome":"Welcome",
-        "explore":"Explore our product catalog.",
-        "post-product-button":"Post product",
-        "profile-button":"Profile",
-        "loginButton":"Login",
-        "registerbutton":"Register",
-        "modal-product-contact":"Contact details of ",
-        "close":"Close",
-        "productModalLabel":"Product",
-        /*footer*/
-        "about":"About us",
-        "abouttext":"We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.",
-        "links":"Quick links",
-        "contact":"Contact us",
-        
-
+        "welcome": "Welcome",
+        "explore": "Explore our product catalog.",
+        "post-product-button": "Post product",
+        "profile-button": "Profile",
+        "loginButton": "Login",
+        "registerButton": "Register",
+        "modal-product-contact": "Contact details of ",
+        "close": "Close",
+        "productModalLabel": "Product",
+        "about": "About us",
+        "abouttext": "We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.",
+        "links": "Quick links",
+        "contact": "Contact us",
+        "more-button": "More",
+        "title-text": "Catalog",
+        "all": "All"
       },
       es: {
         "page-title": "Iniciar Sesión",
@@ -394,23 +394,25 @@
         "button-submit": "Iniciar Sesión",
         "password-placeholder": "Contraseña",
         "email-placeholder": "Correo Electrónico",
-        "welcome":"Bienvenido",
-        "explore":"Explora nuestro catalogo de productos.",
-        "post-product-button":"Publicar producto",
-        "profile-button":"Perfil",
-        "loginButton":"Iniciar sesion",
-        "registerbutton":"Registrarse",
-        "modal-product-contact":"Datos de contacto de ",
-        "close":"Cerrar",
-        "productModalLabel":"Producto",
-        "abouttext":"Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competetividad.",
-        "links":"Enlaces rapidos",
-        "contact":"Contactanos",
-        "about":"Acerca de nosotros"
-
-
+        "welcome": "Bienvenido",
+        "explore": "Explora nuestro catálogo de productos.",
+        "post-product-button": "Publicar producto",
+        "profile-button": "Perfil",
+        "loginButton": "Iniciar sesión",
+        "registerButton": "Registrarse",
+        "modal-product-contact": "Datos de contacto de ",
+        "close": "Cerrar",
+        "productModalLabel": "Producto",
+        "abouttext": "Somos un sitio web dedicado a ofrecer una amplia variedad de productos de alumnos y personal de la UTCH promoviendo el emprendimiento y la competitividad.",
+        "links": "Enlaces rápidos",
+        "contact": "Contáctanos",
+        "about": "Acerca de nosotros",
+        "more-button": "Más",
+        "title-text": "Catalogo",
+        "all": "Todo"
       }
     };
+
 
     function changeLanguage(lang) {
       const elements = document.querySelectorAll('[id]');
@@ -447,7 +449,36 @@
       }
     });
 
+    const languageDropdown = document.getElementById('languageDropdown');
+    const languageOptions = document.getElementById('language-options');
 
+    languageOptions.addEventListener('click', (event) => {
+      const lang = event.target.getAttribute('data-lang');
+      if (lang) {
+        localStorage.setItem('language', lang);
+        applyTranslations(lang);
+      }
+    });
+
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[id]');
+      elements.forEach(element => {
+        const key = element.id;
+        if (translations[lang][key]) {
+          element.textContent = translations[lang][key];
+        }
+        const languageImg = document.getElementById('language-img');
+        if (lang === 'es') {
+          languageImg.src = 'img/MXlenguaje.png';
+        } else {
+          languageImg.src = 'img/language.png';
+        }
+      });
+    }
+
+    // Apply translations based on stored preference
+    const storedLanguage = localStorage.getItem('language') || 'en';
+    applyTranslations(storedLanguage);
     
   </script>
 </body>
