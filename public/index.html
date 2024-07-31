@@ -119,16 +119,17 @@
     }
 
     .carousel-item img {
-            width: 80%; /* Ancho de la imagen */
-            display: block;
-            margin: 0 auto; /* Centra la imagen horizontalmente */
-        }
-        .carousel-inner {
-            text-align: center; /* Centra el contenido del carrusel */
-        }
-        .carousel-control-prev, .carousel-control-next {
-            width: 5%; /* Ajusta el ancho de los controles si es necesario */
-        }
+      width: 60%; /* Ancho de la imagen */
+      display: block;
+      margin: 0 auto; /* Centra la imagen horizontalmente */
+    }
+    .carousel-inner {
+      text-align: center; /* Centra el contenido del carrusel */
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+      width: 5%; /* Ajusta el ancho de los controles si es necesario */
+    }
   </style>
 </head>
 <body>
@@ -180,13 +181,13 @@
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active"> 
-            <img src="img/anuncio-cocacola.jpeg" alt="Imagen 1">
+            <img src="img/anuncio-cocacola.jpeg" alt="Imagen 1" style="border-radius: 10px;">
         </div>
         <div class="carousel-item">
-            <img src="img/anuncio-littlecesars.jpeg" alt="Imagen 2">
+            <img src="img/anuncio-littlecesars.jpeg" alt="Imagen 2" style="border-radius: 10px;">
         </div>
         <div class="carousel-item">
-            <img src="img/anuncio-mcdonal.jpeg" alt="Imagen 3">
+            <img src="img/anuncio-paypal.jpeg" alt="Imagen 3" style="border-radius: 10px;">
         </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -305,7 +306,7 @@
               <div class="card-body">
                 <h5 class="card-title">${product.name}</h5>
                 <p class="card-text">$${product.price}</p>
-                <button class="buy-button btn btn-primary" id="more-button" data-id="${product.id}">More</button>
+                <button class="buy-button btn btn-primary" data-id="${product.id}">Info</button>
               </div>
             </div>
           `;
@@ -419,7 +420,6 @@
         "abouttext": "We are a website dedicated to offering a wide variety of products from students and staff of UTCH, promoting entrepreneurship and competitiveness.",
         "links": "Quick links",
         "contact": "Contact us",
-        "more-button": "More",
         "title-text": "Catalog",
         "all": "All"
       },
@@ -446,7 +446,6 @@
         "links": "Enlaces rápidos",
         "contact": "Contáctanos",
         "about": "Acerca de nosotros",
-        "more-button": "Más",
         "title-text": "Catalogo",
         "all": "Todo"
       }
