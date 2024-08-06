@@ -1,18 +1,13 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
   host: 'srv1578.hstgr.io',
   user: 'u589597310_gmartinez',
   password: '>Cb67gLd0:',
-  database: 'u589597310_proyectoint'
+  database: 'u589597310_proyectoint',
+  waitForConnections: true,
+  connectionLimit: 10, // Ajusta según tus necesidades
+  queueLimit: 0
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Error al conectar a la base de datos:', err);
-    process.exit(1);
-  }
-  console.log('Conectado a la base de datos');
-});
-
-module.exports = db.promise();
+module.exports = pool;

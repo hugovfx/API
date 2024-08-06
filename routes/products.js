@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('../config/cloudinaryConfig'); // Asegúrate de que la ruta sea correcta
-const db = require('../db');
+const pool = require('../db'); // Cambié 'db' por 'pool' para usar el pool de conexiones
 const auth = require('../middleware/auth');
 const streamifier = require('streamifier'); // Importar streamifier
 require('dotenv').config();
@@ -30,11 +30,11 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
 
         try {
           // Registrar la imagen en la base de datos
-          const [imageResult] = await db.query('INSERT INTO images (url) VALUES (?)', [imageUrl]);
+          const [imageResult] = await pool.query('INSERT INTO images (url) VALUES (?)', [imageUrl]);
           const imageId = imageResult.insertId;
 
           // Registrar el producto en la base de datos
-          await db.query('INSERT INTO products (name, price, category_id, description, image_id, user_id) VALUES (?, ?, ?, ?, ?, ?)',
+          await pool.query('INSERT INTO products (name, price, category_id, description, image_id, user_id) VALUES (?, ?, ?, ?, ?, ?)',
             [name, price, category_id, description, imageId, req.user.user_id]
           );
 
@@ -54,7 +54,6 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   }
 });
 
-
 // Obtener la lista de productos con opción de filtro por categoría
 router.get('/', async (req, res) => {
   const categoryId = req.query.category_id;
@@ -73,7 +72,7 @@ router.get('/', async (req, res) => {
   }
 
   try {
-    const [results] = await db.query(query, params);
+    const [results] = await pool.query(query, params);
     res.json(results);
   } catch (err) {
     console.error('Error al obtener los productos:', err);
@@ -84,7 +83,7 @@ router.get('/', async (req, res) => {
 // Obtener información detallada de un producto
 router.get('/:id', async (req, res) => {
   try {
-    const [productResults] = await db.query(`
+    const [productResults] = await pool.query(`
       SELECT p.name, p.price, p.description, c.name AS category_name, 
              u.user_nombre AS user_name, i.url AS image_url 
       FROM products p 
@@ -100,7 +99,7 @@ router.get('/:id', async (req, res) => {
 
     const product = productResults[0];
 
-    const [contactResults] = await db.query(`
+    const [contactResults] = await pool.query(`
       SELECT contact_type, contact_value 
       FROM user_contacts 
       WHERE user_id = (SELECT user_id FROM products WHERE id = ?)
@@ -120,7 +119,7 @@ router.delete('/:id', async (req, res) => {
   const productId = parseInt(req.params.id);
   try {
     // Obtener la URL de la imagen asociada al producto
-    const [product] = await db.query('SELECT image_id FROM products WHERE id = ?', [productId]);
+    const [product] = await pool.query('SELECT image_id FROM products WHERE id = ?', [productId]);
     
     if (product.length === 0) {
       return res.status(404).json({ message: 'Producto no encontrado' });
@@ -129,11 +128,11 @@ router.delete('/:id', async (req, res) => {
     const imageId = product[0].image_id;
 
     // Eliminar el producto
-    await db.query('DELETE FROM products WHERE id = ?', [productId]);
+    await pool.query('DELETE FROM products WHERE id = ?', [productId]);
 
     // Eliminar la imagen asociada (si existe)
     if (imageId) {
-      await db.query('DELETE FROM images WHERE id = ?', [imageId]);
+      await pool.query('DELETE FROM images WHERE id = ?', [imageId]);
     }
 
     res.status(200).json({ message: 'Producto eliminado exitosamente' });
