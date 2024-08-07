@@ -15,14 +15,31 @@ document.getElementById('login-form').addEventListener('submit', async (event) =
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem('token', data.token); // Guarda el token en localStorage
-      alert('Inicio de sesión exitoso');
+      Swal.fire({
+        title: 'Sesión iniciada',
+        text: 'Inicio de sesión exitoso',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+      
       window.location.href = 'index.html'; // Redirige a la página de publicación de productos
     } else {
       const data = await response.json();
-      alert(`Error: ${data.message}`);
+      Swal.fire({
+        title: 'Error',
+        text: data.message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      
     }
   } catch (error) {
     console.error('Error en la solicitud de inicio de sesión:', error);
-    alert('Error en la solicitud de inicio de sesión');
+    Swal.fire({
+      title: 'Error',
+      text: 'Error en la solicitud de inicio de sesión',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
   }
 });

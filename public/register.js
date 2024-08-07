@@ -14,15 +14,31 @@ document.getElementById('register-form').addEventListener('submit', async (event
     });
 
     if (response.ok) {
-      alert('Registro exitoso');
+      Swal.fire({
+        title: 'Registro exitoso',
+        text: '¡Gracias por registrarte!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });      
       window.location.href = 'login.html'; // Redirige al login después del registro
     } else {
       const data = await response.json();
-      alert(`Error: ${data.message}`);
+      Swal.fire({
+        title: 'Error',
+        text: data.message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      
     }
   } catch (error) {
+    Swal.fire({
+      title: 'Error',
+      text: 'Error en el registro',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
     console.error('Error al enviar la solicitud:', error);
-    alert('Error en el registro');
   }
 });
 

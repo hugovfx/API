@@ -1,7 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('token');
   if (!token) {
-    alert('Necesitas iniciar sesión para publicar un producto');
+    Swal.fire({
+      title: 'Sesión no iniciada',
+      text: 'Necesitas iniciar sesión para publicar un producto.',
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+    
     window.location.href = 'login.html';
     return;
   }
